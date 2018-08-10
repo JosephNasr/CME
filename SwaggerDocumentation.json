@@ -1,0 +1,720 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Self Service API"
+  },
+  "host": "ox7ce2thi5.execute-api.us-west-2.amazonaws.com",
+  "basePath": "/develop",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/guest": {
+      "post": {
+        "description": "An endpoint that accepts a Guest model, validates it, and returns a batch ID token that is used to track the status of the passed record.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Guest",
+            "description": "The Guest instance to be sent to Navis",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Guest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guest was posted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "batchId": {
+                  "type": "string",
+                  "description": "The generated batch ID of the processed guest"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The logging url of the produced batch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An exception occured during the processing of the guest",
+            "schema": {
+              "description": "The string representation of the occured exception"
+            }
+          }
+        }
+      }
+    },
+    "/guests": {
+      "post": {
+        "description": "An endpoint that accepts a collection of Guest models, validates it, and returns a batch ID token that is used to track the status of the passed message.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Guests",
+            "description": "The Guests collection object to be sent to Navis",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Guests"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The guest collection was posted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "batchId": {
+                  "type": "string",
+                  "description": "The generated batch ID of the processed guest collection"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The logging url of the produced batch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An exception occured during the processing of the guest collection",
+            "schema": {
+              "description": "The string representation of the occured exception"
+            }
+          }
+        }
+      }
+    },
+    "/roomReservation": {
+      "post": {
+        "description": "An endpoint that accepts a RoomReservation model, validates it, and returns a batch ID token that is used to track the status of the passed record.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "RoomReservation",
+            "description": "The RoomReservation instance to be sent to Navis",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RoomReservation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RoomReservation was posted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "batchId": {
+                  "type": "string",
+                  "description": "The generated batch ID of the processed room reservation"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The logging url of the produced batch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An exception occured during the processing of the room reservation",
+            "schema": {
+              "description": "The string representation of the occured exception"
+            }
+          }
+        }
+      }
+    },
+    "/roomReservations": {
+      "post": {
+        "description": "An endpoint that accepts a collection of RoomReservation models, validates it, and returns a batch ID token that is used to track the status of the passed message.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "RoomReservations",
+            "description": "The RoomReservation collection to be sent to Navis",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RoomReservations"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The room reservation collection was posted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "batchId": {
+                  "type": "string",
+                  "description": "The generated batch ID of the processed room reservation collection"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The logging url of the produced batch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An exception occured during the processing of the room reservation collection",
+            "schema": {
+              "description": "The string representation of the occured exception"
+            }
+          }
+        }
+      }
+    },
+    "/logging": {
+      "get": {
+        "description": "Get the logging status of any specified batch",
+        "produces": [
+          "text/plain",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "batchId",
+            "type": "string",
+            "required": true,
+            "description": "The ID of the desired batch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The logging status was returned successfully",
+            "schema": {
+              "$ref": "#/definitions/BatchLog"
+            }
+          },
+          "400": {
+            "description": "The batchId parameter is missing from the request"
+          },
+          "404": {
+            "description": "The specified batchId does not exist"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Guest": {
+      "title": "Guest",
+      "type": "object",
+      "required": [
+        "acct_Nbr",
+        "resGuestID"
+      ],
+      "properties": {
+        "ac_CountryCode": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "acct_Nbr": {
+          "type": "string",
+          "format": "char",
+          "minLength": 1,
+          "maxLength": 11
+        },
+        "address1": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "address2": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "address3": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "cellPhone": {
+          "type": "string",
+          "maxLength": 25
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "company": {
+          "type": "string",
+          "maxLength": 35
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "firstName": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "guestType": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "homePhone": {
+          "type": "string",
+          "maxLength": 25
+        },
+        "lastName": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "middleName": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "navisCountry": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "reSend": {
+          "type": "boolean"
+        },
+        "reSend_Cancellation": {
+          "type": "boolean"
+        },
+        "reSend_Confirmation": {
+          "type": "boolean"
+        },
+        "reSend_Departure": {
+          "type": "boolean"
+        },
+        "reSend_PreArrival": {
+          "type": "boolean"
+        },
+        "resGuestID": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "salutation": {
+          "type": "string",
+          "maxLength": 25
+        },
+        "state": {
+          "type": "string",
+          "format": "char",
+          "maxLength": 50
+        },
+        "suffix": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "vipCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "workPhone": {
+          "type": "string",
+          "maxLength": 25
+        },
+        "zip": {
+          "type": "string",
+          "format": "char",
+          "maxLength": 50
+        },
+        "allowAddress": {
+          "type": "boolean"
+        },
+        "allowEmail": {
+          "type": "boolean"
+        },
+        "allowPhone": {
+          "type": "boolean"
+        }
+      }
+    },
+    "RoomReservation": {
+      "title": "RoomReservation",
+      "type": "object",
+      "required": [
+        "acct_Nbr",
+        "adults",
+        "amountPaid",
+        "checkinDate",
+        "checkoutDate",
+        "children",
+        "mergeResAttrDataForMidStayChangeOver",
+        "resGuestID",
+        "resNum",
+        "stayStatus"
+      ],
+      "properties": {
+        "ac_AverageNightlyRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "ac_BookingChannel": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_CancellationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ac_Deposit": {
+          "type": "number",
+          "format": "double"
+        },
+        "ac_EventStatus": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_EventType": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_GuestType": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "ac_IATANum": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "ac_LocationCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_MktSeg": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_MktSeg2": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "ac_PackageCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_PayMethod": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_RateCode": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "ac_RoomTypeCode": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "ac_SourceOfBusiness": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "ac_SubMarket": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "ac_Trigger": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "acct_Nbr": {
+          "type": "string",
+          "maxLength": 11
+        },
+        "adults": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "altResNum": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "amountPaid": {
+          "type": "number",
+          "format": "double",
+          "default": 0
+        },
+        "ancillaryPaid": {
+          "type": "number",
+          "format": "double"
+        },
+        "cancellationCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "checkinDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "checkoutDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "children": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "confirmationCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "corporateCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "crsConfirmationCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "emailCCs": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "emailResNum": {
+          "type": "string",
+          "maxLength": 75
+        },
+        "groupCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "groupName": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "itineraryCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "leadKey": {
+          "type": "number",
+          "format": "double"
+        },
+        "lodgingLocation": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "mergeResAttrDataForMidStayChangeOver": {
+          "type": "boolean",
+          "default": false
+        },
+        "notes": {
+          "type": "string"
+        },
+        "propID": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "reasonforStay": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "resAgent": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "reSend": {
+          "type": "boolean"
+        },
+        "reSend_Cancellation": {
+          "type": "boolean"
+        },
+        "reSend_Confirmation": {
+          "type": "boolean"
+        },
+        "reSend_Departure": {
+          "type": "boolean"
+        },
+        "reSend_PreArrival": {
+          "type": "boolean"
+        },
+        "reservationType": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "resGuestID": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "resMadeDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "resMarket": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "resMethod": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "resNum": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "resStatus": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "shareCode": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "shareCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "stayStatus": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "stayType": {
+          "type": "string",
+          "maxLength": 50,
+          "enum": [
+            "Deleted",
+            "Confirmed",
+            "Held",
+            "Cancelled"
+          ]
+        },
+        "taContactID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalStayAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "unitID": {
+          "type": "string",
+          "maxLength": 50
+        }
+      }
+    },
+    "Guests": {
+      "title": "GuestArray",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Guest"
+      }
+    },
+    "RoomReservations": {
+      "title": "RoomReservationArray",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RoomReservation"
+      }
+    },
+    "BatchLog": {
+      "title": "BatchLog",
+      "type": "object",
+      "properties": {
+        "batchId": {
+          "type": "string",
+          "description": "The current batch ID"
+        },
+        "batchSize": {
+          "type": "string",
+          "description": "The number of messages in the current batch"
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number of the current batch"
+        },
+        "siteName": {
+          "type": "string",
+          "description": "The site name of the current batch"
+        },
+        "statusMessages": {
+          "type": "array",
+          "description": "The logs of the current batch",
+          "items": {
+            "type": "object",
+            "properties": {
+              "statusType": {
+                "type": "string",
+                "description": "The type of the current log message",
+                "example": {
+                  "0": "Batch was created successfully",
+                  "1": "Error creating the batch",
+                  "2": "Message was parsed successfully",
+                  "3": "Error parsing the message",
+                  "4": "Message was processed successfully",
+                  "5": "Error processing message",
+                  "6": "Message was saved successfully",
+                  "7": "Error saving the message"
+                }
+              },
+              "messageId": {
+                "type": "string",
+                "description": "The ID of the current message"
+              },
+              "recordId": {
+                "type": "string",
+                "description": "The ID of the current object"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "The timestamp of the current log"
+              },
+              "errors": {
+                "type": "array",
+                "description": "A list of all the errors that occured during this processing state",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "A masked error message. Navis support should be contacted with the batchId in order to unmask the error"
+                    },
+                    "exception": {
+                      "type": "string",
+                      "description": "A masked exception. Navis support should be contacted with the batchId in order to unmask the error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
