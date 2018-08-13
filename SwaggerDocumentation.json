@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Self Service API allowing clients to integrate directly with the Navis data store.<br><br>All the endpoints use an OAuth2 bearer token that should be added to the header of each request as **Authorization: Bearer {token}**.<br><br>To get the bearer token, the client must send a POST request to the Navis OpenId endpoint **https://auth.navisdrive.com/connect/token** with the following body parameters:<br><ul><li>**client_id: {provided by Navis}**</li><li>**client_secret: {provided by Navis}**</li><li>**grant_type: client_credentials**</li><li>**scope: dataExchange**</li></ul><br><strong>NB: The *expires_in* field (int) is returned with every access token; it is expressed in seconds, and when the access token is expired, a new one should be requested.</strong>",
+    "description": "Self Service API allowing clients to integrate directly with the Navis data store.<br><br>All the endpoints use an OAuth2 bearer token that should be added to the header of each request as **Authorization: Bearer {token}**.<br><br>To get the bearer token, the client must send a POST request to the Navis OpenId endpoint **https://auth.navisdrive.com/connect/token** with the following body parameters:<br><ul><li>**client_id: {provided by Navis}**</li><li>**client_secret: {provided by Navis}**</li><li>**grant_type: client_credentials**</li><li>**scope: dataExchange**</li></ul><br><strong>NB:</strong> The *expires_in* field (int) is returned with every access token; it is expressed in seconds, and when the access token is expired, a new one should be requested.",
     "title": "Self Service API",
     "version": "1.0",
     "termsOfService": "",
@@ -15,9 +15,6 @@
     "https"
   ],
   "tags": [
-    {
-      "name": "authorization"
-    },
     {
       "name": "guest"
     },
