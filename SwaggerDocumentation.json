@@ -1,23 +1,50 @@
 {
   "swagger": "2.0",
   "info": {
+    "description": "Self Service API allowing clients to integrate directly with the Navis data store.<br><br>All the endpoints use an OAuth2 bearer token that should be added to the header of each request as **Authorization: Bearer {token}**.<br><br>To get the bearer token, the client must send a POST request to the Navis OpenId endpoint **https://auth.navisdrive.com/connect/token** with the following body parameters:<br><ul><li>**client_id: {provided by Navis}**</li><li>**client_secret: {provided by Navis}**</li><li>**grant_type: client_credentials**</li><li>**scope: dataExchange**</li></ul><br><strong>NB: The *expires_in* field (int) is returned with every access token; it is expressed in seconds, and when the access token is expired, a new one should be requested.</strong>",
+    "title": "Self Service API",
     "version": "1.0",
-    "title": "Self Service API"
+    "termsOfService": "",
+    "contact": {
+      "email": "navis-nde@gotocme.com"
+    }
   },
-  "host": "ox7ce2thi5.execute-api.us-west-2.amazonaws.com",
-  "basePath": "/develop",
+  "host": "cgnu1ub4ya.execute-api.us-west-2.amazonaws.com",
+  "basePath": "/dev",
   "schemes": [
     "https"
+  ],
+  "tags": [
+    {
+      "name": "authorization"
+    },
+    {
+      "name": "guest"
+    },
+    {
+      "name": "reservation"
+    },
+    {
+      "name": "log"
+    }
   ],
   "paths": {
     "/guest": {
       "post": {
+        "tags": [
+          "guest"
+        ],
         "description": "An endpoint that accepts a Guest model, validates it, and returns a batch ID token that is used to track the status of the passed record.",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
+        ],
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "parameters": [
           {
@@ -47,6 +74,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "An exception occured during the processing of the guest",
             "schema": {
@@ -58,12 +88,20 @@
     },
     "/guests": {
       "post": {
+        "tags": [
+          "guest"
+        ],
         "description": "An endpoint that accepts a collection of Guest models, validates it, and returns a batch ID token that is used to track the status of the passed message.",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
+        ],
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "parameters": [
           {
@@ -93,6 +131,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "An exception occured during the processing of the guest collection",
             "schema": {
@@ -104,12 +145,20 @@
     },
     "/roomReservation": {
       "post": {
+        "tags": [
+          "reservation"
+        ],
         "description": "An endpoint that accepts a RoomReservation model, validates it, and returns a batch ID token that is used to track the status of the passed record.",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
+        ],
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "parameters": [
           {
@@ -139,6 +188,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "An exception occured during the processing of the room reservation",
             "schema": {
@@ -150,12 +202,20 @@
     },
     "/roomReservations": {
       "post": {
+        "tags": [
+          "reservation"
+        ],
         "description": "An endpoint that accepts a collection of RoomReservation models, validates it, and returns a batch ID token that is used to track the status of the passed message.",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
+        ],
+        "security": [
+          {
+            "OAuth2": []
+          }
         ],
         "parameters": [
           {
@@ -185,6 +245,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "An exception occured during the processing of the room reservation collection",
             "schema": {
@@ -196,7 +259,15 @@
     },
     "/logging": {
       "get": {
+        "tags": [
+          "log"
+        ],
         "description": "Get the logging status of any specified batch",
+        "security": [
+          {
+            "OAuth2": []
+          }
+        ],
         "produces": [
           "text/plain",
           "application/json"
@@ -220,11 +291,22 @@
           "400": {
             "description": "The batchId parameter is missing from the request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "The specified batchId does not exist"
           }
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "OAuth2": {
+      "type": "oauth2",
+      "description": "The Navis OpenId endpoint",
+      "flow": "application",
+      "tokenUrl": "https://auth.navisdrive.com/connect/token"
     }
   },
   "definitions": {
@@ -669,18 +751,9 @@
             "type": "object",
             "properties": {
               "statusType": {
-                "type": "string",
-                "description": "The type of the current log message",
-                "example": {
-                  "0": "Batch was created successfully",
-                  "1": "Error creating the batch",
-                  "2": "Message was parsed successfully",
-                  "3": "Error parsing the message",
-                  "4": "Message was processed successfully",
-                  "5": "Error processing message",
-                  "6": "Message was saved successfully",
-                  "7": "Error saving the message"
-                }
+                "type": "number",
+                "format": "integer",
+                "description": "The type of the current log message. Available values: 0: Batch was created successfully, 1: Error creating the batch, 2: Message was parsed successfully, 3: Error parsing the message, 4: Message was processed successfully, 5: Error processing the message, 6: Message was saved successfully, 7: Error saving the message"
               },
               "messageId": {
                 "type": "string",
